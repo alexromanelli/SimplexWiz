@@ -160,6 +160,25 @@ int main() {
 	ModeloPL* modeloNaFormaPadrao = modeloOriginal->obterModeloNaFormaPadrao();
 	legenda = "Modelo na forma padrão";
 	modeloNaFormaPadrao->imprimirModelo(&legenda);
+
+	// determina solução básica factível
+	double* solucaoBasicaFactivel = modeloNaFormaPadrao->definirSolucaoBasicaFactivel();
+	legenda = "Modelo na forma padrão após definir solução básica factível";
+	modeloNaFormaPadrao->imprimirModelo(&legenda);
+
+	std::printf("\n Solução básica factível:\n");
+	for (int i = 0; i < modeloNaFormaPadrao->getQuantidadeVariaveis(); i++) {
+		std::printf("  x%-2d = %8.3f\n", i + 1, solucaoBasicaFactivel[i]);
+	}
+
+	modeloNaFormaPadrao->definirTableauInicialBigM();
+	modeloNaFormaPadrao->imprimirTableau();
+
+	if (modeloNaFormaPadrao->executarPassoSimplex())
+		modeloNaFormaPadrao->imprimirTableau();
+	if (modeloNaFormaPadrao->executarPassoSimplex())
+		modeloNaFormaPadrao->imprimirTableau();
+
     return 0;
 }
 

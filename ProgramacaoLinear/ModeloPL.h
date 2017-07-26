@@ -10,6 +10,8 @@
 
 #include <string>
 
+const double M = 1e+300;
+
 enum Objetivo {
 	max,
 	min
@@ -24,11 +26,20 @@ enum OperadorRelacional {
 	Irrestrito // incluído nesta estrutura para caso de variáveis irrestritas
 };
 
+enum TipoVariavel {
+	Original,
+	Folga,
+	Excesso,
+	SubstitutaParaVariavelIrrestrita,
+	Artificial
+};
+
 class ModeloPL {
 private:
 	Objetivo objetivo;
 	int quantidadeVariaveis;
 	int quantidadeVariaveisOriginais;
+	TipoVariavel* tipoVariavel;
 	double* coeficienteFuncaoObjetivo;
 	int quantidadeRestricoes;
 	double** restricaoCoeficiente;
@@ -36,6 +47,17 @@ private:
 	double* restricaoConstanteLadoDireito;
 	OperadorRelacional* limiteVariavelOperadorRelacional;
 	double* limiteVariavelConstanteLadoDireito;
+
+	int* indVariavelBasicaRestricao;
+
+	double* tableauCj;
+	double* tableauCB;
+	int* tableauBase;
+	double** tableauMatriz;
+	double* tableauConstantesLadoDireito;
+	double* tableauContribuicaoLucroLiquido; // C_Barra
+	double tableauZ;
+	bool* tableauVariavelEliminada; // para o caso de eliminar variáveis artificiais
 
 	/**
 	 * Faz um mapeamento entre as variáveis originais no modelo, representadas pelas linhas desta
@@ -47,6 +69,9 @@ private:
 	int** correspondenciaVariaveisIrrestritas;
 
 	int adicionarVariavel(); // retorna o índice da variável adicionada
+	int adicionarVariavelFolga();
+	int adicionarVariavelExcesso();
+	bool eVariavelBasica(int indVar);
 
 	/**
 	 * Acrescenta uma nova linha na matriz de correspondência entre variáveis originais irrestritas
@@ -60,11 +85,18 @@ public:
 			OperadorRelacional* limiteVariavelOperadorRelacional, double* limiteVariavelConstanteLadoDireito);
 
 	ModeloPL(ModeloPL* origem);
+	virtual ~ModeloPL();
 
 	ModeloPL* obterModeloNaFormaPadrao();
 	void imprimirModelo(std::string* legenda);
-	virtual ~ModeloPL();
+	int incluirVariavelArtificial(int indRestricaoCoeficienteUm);
+	double* definirSolucaoBasicaFactivel();
 
+	int getQuantidadeVariaveis() { return this->quantidadeVariaveis; }
+
+	void definirTableauInicialBigM();
+	bool executarPassoSimplex();
+	void imprimirTableau();
 
 };
 
