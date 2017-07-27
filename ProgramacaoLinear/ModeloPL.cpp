@@ -636,14 +636,14 @@ bool ModeloPL::executarPassoSimplex() {
 				razaoMinima = razao;
 				indLinhaRazaoMinima = i;
 			}
-			std::printf("%13d %12s %23f\n", i + 1, str, razao);
+			std::printf("%13d %12s %23.3f\n", i + 1, str, razao);
 		} else {
-			std::printf("%13d %12s               INFINITO\n", i + 1, str);
+			std::printf("%13d %12s                INFINITO\n", i + 1, str);
 		}
 	}
 	std::printf("-----------------------------------------------------\n");
 
-	std::printf("\nSai da base: x%d\n", tableauBase[indLinhaRazaoMinima] + 1);
+	std::printf("Sai da base: x%d\n", tableauBase[indLinhaRazaoMinima] + 1);
 
 	// elimina variável que sai da base, se for artificial
 	if (tipoVariavel[tableauBase[indLinhaRazaoMinima]] == TipoVariavel::Artificial)
@@ -670,6 +670,19 @@ bool ModeloPL::executarPassoSimplex() {
 			}
 			tableauConstantesLadoDireito[i] += tableauConstantesLadoDireito[indLinhaRazaoMinima] * (-coef);
 		}
+	}
+	// atualiza contribuição lucro líquido
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		double produtoInterno = 0;
+		for (int j = 0; j < quantidadeRestricoes; j++) {
+			produtoInterno += tableauCB[j] * tableauMatriz[j][i];
+		}
+		tableauContribuicaoLucroLiquido[i] = tableauCj[i] - produtoInterno;
+	}
+	// atualiza Z
+	tableauZ = 0;
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		tableauZ += tableauCB[i] * tableauConstantesLadoDireito[i];
 	}
 
 	return true;
@@ -783,4 +796,51 @@ void ModeloPL::imprimirTableau() {
 		std::printf("----------");
 	}
 	std::printf("+-------------\n");
+}
+
+double* ModeloPL::obterSolucaoTableau() {
+	double* solucao = new double[quantidadeVariaveis];
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		solucao[i] = 0;
+	}
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		solucao[tableauBase[i]] = tableauConstantesLadoDireito[i];
+	}
+	return solucao;
+}
+
+void ModeloPL::imprimirSolucaoTableau() {
+	double* solucao = this->obterSolucaoTableau();
+	std::printf("\nSolução encontrada:\n");
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		std::string tipo = "";
+		switch (tipoVariavel[i]) {
+		case TipoVariavel::Artificial:
+			tipo = "artificial";
+			break;
+		case TipoVariavel::Excesso:
+			tipo = "excesso";
+			break;
+		case TipoVariavel::Folga:
+			tipo = "folga";
+			break;
+		case TipoVariavel::Original:
+			tipo = "original";
+			break;
+		case TipoVariavel::SubstitutaParaVariavelIrrestrita:
+			tipo = "substituta*";
+			break;
+		}
+		std::printf("  x%-2d = %8.3f   ( %11s )\n", i + 1, solucao[i], tipo.c_str());
+	}
+
+	if (this->correspondenciaVariaveisIrrestritas != NULL) {
+		std::printf("\n(*) substitutas para variáveis originalmente irrestritas em sinal:\n");
+		for (int i = 0; i < this->quantidadeVariaveisOriginais; i++) {
+			if (this->correspondenciaVariaveisIrrestritas[i] != NULL) {
+				std::printf(" x'%-2d = x%-2d - x%-2d\n", i + 1, this->correspondenciaVariaveisIrrestritas[i][0] + 1,
+						this->correspondenciaVariaveisIrrestritas[i][1] + 1);
+			}
+		}
+	}
 }

@@ -97,6 +97,8 @@ public:
 	void definirTableauInicialBigM();
 	bool executarPassoSimplex();
 	void imprimirTableau();
+	double* obterSolucaoTableau();
+	void imprimirSolucaoTableau();
 
 };
 

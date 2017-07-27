@@ -19,6 +19,32 @@ std::vector<std::string>* splitBySpaces(std::string& str) {
     return elementos;
 }
 
+//void splitBySpaces(std::string linha, std::vector<std::string>& elem) {
+//    std::istringstream iss(linha);
+//    elem.clear();
+//    std::copy(std::istream_iterator<std::string>(iss),
+//         std::istream_iterator<std::string>(),
+//         back_inserter(elem));
+//}
+
+void splitBySpaces(std::string* linha, std::vector<std::string>* elem) {
+	elem->clear();
+	std::string parte = "";
+	for (unsigned int i = 0; i < linha->length(); i++) {
+		if (linha->at(i) == ' ') {
+			std::string item = parte.c_str();
+			elem->push_back(item);
+			parte.clear();
+		} else {
+			parte.push_back(linha->at(i));
+		}
+	}
+	if (parte.length() > 0) {
+		std::string item = parte.c_str();
+		elem->push_back(item);
+	}
+}
+
 /**
  * Formato (exemplo):
  * min x1 + x2
@@ -39,36 +65,51 @@ std::vector<std::string>* splitBySpaces(std::string& str) {
  * |2 irr                                 |
  * +--------------------------------------+
  */
+
 ModeloPL* lerModeloProgramacaoLinear() {
-    std::string linha;
+	std::string* linha = new std::string("");
+	std::vector<std::string>* elem = new std::vector<std::string>();
 
-    std::getline(std::cin, linha, '\n');
-    std::vector<std::string>* elem = splitBySpaces(linha);
+	std::getline(std::cin, *linha, '\n');
+    splitBySpaces(linha, elem);
     int quantidadeVariaveis = atoi((*elem)[1].c_str());
-    delete elem;
 
-    std::getline(std::cin, linha, '\n');
-    elem = splitBySpaces(linha);
+//    std::vector<std::string>* elem = splitBySpaces(linha);
+//    int quantidadeVariaveis = atoi((*elem)[1].c_str());
+//    delete elem;
+
+    std::getline(std::cin, *linha, '\n');
+//    elem = splitBySpaces(linha);
+    splitBySpaces(linha, elem);
     Objetivo objetivo;
+//    if ((*elem)[1].compare("min") == 0) {
+//    	objetivo = Objetivo::min;
+//    } else if ((*elem)[1].compare("max") == 0) {
+//    	objetivo = Objetivo::max;
+//    }
+//    delete elem;
     if ((*elem)[1].compare("min") == 0) {
     	objetivo = Objetivo::min;
     } else if ((*elem)[1].compare("max") == 0) {
     	objetivo = Objetivo::max;
     }
-    delete elem;
 
     double* coeficientesFuncaoObjetivo = new double[2];
-    std::getline(std::cin, linha, '\n');
-    elem = splitBySpaces(linha);
+    std::getline(std::cin, *linha, '\n');
+//    elem = splitBySpaces(linha);
+    splitBySpaces(linha, elem);
     for (int i = 0; i < quantidadeVariaveis; i++) {
+//    	coeficientesFuncaoObjetivo[i] = atof((*elem)[i + 1].c_str());
     	coeficientesFuncaoObjetivo[i] = atof((*elem)[i + 1].c_str());
     }
-    delete elem;
+//    delete elem;
 
-    std::getline(std::cin, linha, '\n');
-    elem = splitBySpaces(linha);
+    std::getline(std::cin, *linha, '\n');
+//    elem = splitBySpaces(linha);
+//    int quantidadeRestricoes = atoi((*elem)[1].c_str());
+//    delete elem;
+    splitBySpaces(linha, elem);
     int quantidadeRestricoes = atoi((*elem)[1].c_str());
-    delete elem;
 
     // declaração de variáveis para os dados das restrições
     double** matrizCoeficientes = new double*[quantidadeRestricoes];
@@ -79,11 +120,13 @@ ModeloPL* lerModeloProgramacaoLinear() {
 
     // obter cada restrição
     for (int i = 0; i < quantidadeRestricoes; i++) {
-        std::getline(std::cin, linha, '\n');
-        elem = splitBySpaces(linha);
+        std::getline(std::cin, *linha, '\n');
+//        elem = splitBySpaces(linha);
+        splitBySpaces(linha, elem);
 
         // obter coeficientes das variáveis
         for (int j = 0; j < quantidadeVariaveis; j++) {
+//        	matrizCoeficientes[i][j] = atof((*elem)[j].c_str());
         	matrizCoeficientes[i][j] = atof((*elem)[j].c_str());
         }
 
@@ -99,15 +142,27 @@ ModeloPL* lerModeloProgramacaoLinear() {
         } else if ((*elem)[quantidadeVariaveis].compare(">") == 0) {
             operadorRelacional[i] = OperadorRelacional::Maior;
         }
+//        if (elem[quantidadeVariaveis].compare("<") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::Menor;
+//        } else if (elem[quantidadeVariaveis].compare("<=") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::MenorOuIgual;
+//        } else if (elem[quantidadeVariaveis].compare("=") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::Igual;
+//        } else if (elem[quantidadeVariaveis].compare(">=") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::MaiorOuIgual;
+//        } else if (elem[quantidadeVariaveis].compare(">") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::Maior;
+//        }
 
         // obter constante do lado direito
         vetorConstantes[i] = atof((*elem)[quantidadeVariaveis + 1].c_str());
+//        vetorConstantes[i] = atof(elem[quantidadeVariaveis + 1].c_str());
 
-        delete elem;
+//        delete elem;
     }
 
     // salta linha com texto "limites-variaveis:"
-    std::getline(std::cin, linha);
+    std::getline(std::cin, *linha);
 
     // declaração de estruturas para os limites das variáveis
     OperadorRelacional* limiteVariavelRelacao = new OperadorRelacional[quantidadeVariaveis];
@@ -115,11 +170,13 @@ ModeloPL* lerModeloProgramacaoLinear() {
 
     // obter limites de variáveis
     for (int i = 0; i < quantidadeVariaveis; i++) {
-    	std::getline(std::cin, linha, '\n');
-    	elem = splitBySpaces(linha);
+    	std::getline(std::cin, *linha, '\n');
+//    	elem = splitBySpaces(linha);
+    	splitBySpaces(linha, elem);
 
     	// obter índice da variável
     	int indVariavel = atoi((*elem)[0].c_str()) - 1;
+//    	int indVariavel = atoi(elem[0].c_str()) - 1;
 
         // obter operador relacional
     	OperadorRelacional op;
@@ -136,11 +193,25 @@ ModeloPL* lerModeloProgramacaoLinear() {
         } else if ((*elem)[1].compare("irr") == 0) {
         	op = OperadorRelacional::Irrestrito;
         }
+//        if (elem[1].compare("<") == 0) {
+//        	op = OperadorRelacional::Menor;
+//        } else if (elem[1].compare("<=") == 0) {
+//        	op = OperadorRelacional::MenorOuIgual;
+//        } else if (elem[1].compare("=") == 0) {
+//        	op = OperadorRelacional::Igual;
+//        } else if (elem[1].compare(">=") == 0) {
+//        	op = OperadorRelacional::MaiorOuIgual;
+//        } else if (elem[1].compare(">") == 0) {
+//        	op = OperadorRelacional::Maior;
+//        } else if (elem[1].compare("irr") == 0) {
+//        	op = OperadorRelacional::Irrestrito;
+//        }
 
         // obter constante do lado direito
         double cons = 0;
         if (op != OperadorRelacional::Irrestrito)
         	cons = atof((*elem)[2].c_str());
+//        	cons = atof(elem[2].c_str());
 
         limiteVariavelRelacao[indVariavel] = op;
         limiteVariavelConstante[indVariavel] = cons;
@@ -155,16 +226,16 @@ ModeloPL* lerModeloProgramacaoLinear() {
 int main() {
     // entrada de dados:
 	ModeloPL* modeloOriginal = lerModeloProgramacaoLinear();
-	std::string legenda = "Modelo original";
-	modeloOriginal->imprimirModelo(&legenda);
+	std::string* legenda = new std::string("Modelo original");
+	modeloOriginal->imprimirModelo(legenda);
 	ModeloPL* modeloNaFormaPadrao = modeloOriginal->obterModeloNaFormaPadrao();
-	legenda = "Modelo na forma padrão";
-	modeloNaFormaPadrao->imprimirModelo(&legenda);
+	*legenda = "Modelo na forma padrão";
+	modeloNaFormaPadrao->imprimirModelo(legenda);
 
 	// determina solução básica factível
 	double* solucaoBasicaFactivel = modeloNaFormaPadrao->definirSolucaoBasicaFactivel();
-	legenda = "Modelo na forma padrão após definir solução básica factível";
-	modeloNaFormaPadrao->imprimirModelo(&legenda);
+	*legenda = "Modelo na forma padrão após definir solução básica factível";
+	modeloNaFormaPadrao->imprimirModelo(legenda);
 
 	std::printf("\n Solução básica factível:\n");
 	for (int i = 0; i < modeloNaFormaPadrao->getQuantidadeVariaveis(); i++) {
@@ -174,10 +245,25 @@ int main() {
 	modeloNaFormaPadrao->definirTableauInicialBigM();
 	modeloNaFormaPadrao->imprimirTableau();
 
-	if (modeloNaFormaPadrao->executarPassoSimplex())
-		modeloNaFormaPadrao->imprimirTableau();
-	if (modeloNaFormaPadrao->executarPassoSimplex())
-		modeloNaFormaPadrao->imprimirTableau();
+	int iteracoes = 0;
+	bool solOtima = false;
+	while (true) {
+		bool deuPasso = modeloNaFormaPadrao->executarPassoSimplex();
+		if (deuPasso) {
+			modeloNaFormaPadrao->imprimirTableau();
+			iteracoes++;
+			if (iteracoes > 10)
+				break;
+		} else {
+			solOtima = true;
+			break;
+		}
+	}
+	if (solOtima) {
+		modeloNaFormaPadrao->imprimirSolucaoTableau();
+	} else {
+		std::printf("\nProblema para encontrar solução ótima. Loop.");
+	}
 
     return 0;
 }
