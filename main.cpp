@@ -52,7 +52,7 @@ void splitBySpaces(std::string* linha, std::vector<std::string>* elem) {
  *     x1 + 2x2 <= 4
  *           x2 <= 1
  *     x1 >= 0
- *     x2 >= 0
+ *     x2 irrestrita em sinal
  * +--------------------------------------+
  * |objetivo: min                         |
  * |variaveis: 2                          |
