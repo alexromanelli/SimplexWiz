@@ -8,4 +8,5 @@ restricoes: 3
 limites-variaveis:
 1 >= 0
 2 >= 0
-3 irr 
+3 irr
+

@@ -99,4 +99,70 @@ Solução encontrada:
   x4  =    1.000   (       folga )
 
 
-Fim da execução.
+Fim da execução do SIMPLEX "normal".
+
+
+Execução do SIMPLEX Revisado:
+
+ Vetores P_i:
+ ---
+      P_1       P_2       P_3       P_4 
+ --------  --------  --------  -------- 
+    1.000    -2.000     1.000     0.000 
+    0.000     1.000     0.000     1.000 
+ ---
+
+ Tableau SIMPLEX Revisado (MIN)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x1 ;    1.000 ;    0.000 ;    4.000 
+   x4 ;    0.000 ;    1.000 ;    1.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    1.000    0.000 ]
+
+C_barra[ 1] =    0.000
+C_barra[ 2] =    3.000
+C_barra[ 3] =   -1.000
+C_barra[ 4] =    0.000
+
+Entra na base: x3
+
+P_barra[ 3]T = [    1.000    0.000 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x3)
+-----------------------------------------------------
+            1           x1                   4.000
+            2           x4                INFINITO
+-----------------------------------------------------
+Sai da base: x1
+
+ Tableau SIMPLEX Revisado (MIN)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x3 ;    1.000 ;    0.000 ;    4.000 
+   x4 ;    0.000 ;    1.000 ;    1.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000    0.000 ]
+
+C_barra[ 1] =    1.000
+C_barra[ 2] =    1.000
+C_barra[ 3] =    0.000
+C_barra[ 4] =    0.000
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =    0.000   (    original )
+  x2  =    0.000   (    original )
+  x3  =    4.000   (       folga )
+  x4  =    1.000   (       folga )
+
+
+Fim da execução do SIMPLEX Revisado.
+

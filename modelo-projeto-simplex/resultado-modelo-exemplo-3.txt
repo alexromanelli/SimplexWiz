@@ -198,4 +198,188 @@ Solução encontrada:
  x'3  = x3  - x6 
 
 
-Fim da execução.
+Fim da execução do SIMPLEX "normal".
+
+
+Execução do SIMPLEX Revisado:
+
+ Vetores P_i:
+ ---
+      P_1       P_2       P_3       P_4       P_5       P_6       P_7       P_8 
+ --------  --------  --------  --------  --------  --------  --------  -------- 
+    1.000     1.000     1.000     1.000     0.000    -1.000     0.000     0.000 
+    1.000    -1.000     1.000     0.000    -1.000    -1.000     1.000     0.000 
+   -3.000     1.000     2.000    -0.000    -0.000    -2.000     0.000     1.000 
+ ---
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x4 ;    1.000 ;    0.000 ;    0.000 ;    7.000 
+   x7 ;    0.000 ;    1.000 ;    0.000 ;    2.000 
+   x8 ;    0.000 ;    0.000 ;    1.000 ;    5.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000  -1e+300  -1e+300 ]
+
+C_barra[ 1] = -2.00000e+300
+C_barra[ 2] = -2.00000e+00
+C_barra[ 3] = +3.00000e+300
+C_barra[ 4] = +0.00000e+00
+C_barra[ 5] = -1.00000e+300
+C_barra[ 6] = -3.00000e+300
+C_barra[ 7] = +0.00000e+00
+C_barra[ 8] = +0.00000e+00
+
+Entra na base: x3
+
+P_barra[ 3]T = [    1.000    1.000    2.000 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x3)
+-----------------------------------------------------
+            1           x4                   7.000
+            2           x7                   2.000
+            3           x8                   2.500
+-----------------------------------------------------
+Sai da base: x7
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x4 ;    1.000 ;   -1.000 ;    0.000 ;    5.000 
+   x3 ;    0.000 ;    1.000 ;    0.000 ;    2.000 
+   x8 ;    0.000 ;   -2.000 ;    1.000 ;    1.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000  +2e+300  -1e+300 ]
+
+C_barra[ 1] = -5.00000e+300
+C_barra[ 2] = +3.00000e+300
+C_barra[ 3] = +0.00000e+00
+C_barra[ 4] = +0.00000e+00
+C_barra[ 5] = +2.00000e+300
+C_barra[ 6] = -3.00000e+00
+C_barra[ 7] = +0.00000e+00
+C_barra[ 8] = +0.00000e+00
+
+Entra na base: x2
+
+P_barra[ 2]T = [    2.000   -1.000    3.000 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x2)
+-----------------------------------------------------
+            1           x4                   2.500
+            2           x3                INFINITO
+            3           x8                   0.333
+-----------------------------------------------------
+Sai da base: x8
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x4 ;    1.000 ;    0.333 ;   -0.667 ;    4.333 
+   x3 ;    0.000 ;    0.333 ;    0.333 ;    2.333 
+   x2 ;    0.000 ;   -0.667 ;    0.333 ;    0.333 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000    2.333    0.333 ]
+
+C_barra[ 1] =   -0.333
+C_barra[ 2] =    0.000
+C_barra[ 3] =    0.000
+C_barra[ 4] =    0.000
+C_barra[ 5] =    2.333
+C_barra[ 6] =    0.000
+C_barra[ 7] =    0.000
+C_barra[ 8] =    0.000
+
+Entra na base: x5
+
+P_barra[ 5]T = [   -0.333   -0.333    0.667 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x5)
+-----------------------------------------------------
+            1           x4                INFINITO
+            2           x3                INFINITO
+            3           x2                   0.500
+-----------------------------------------------------
+Sai da base: x2
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x4 ;    1.000 ;    0.000 ;   -0.500 ;    4.500 
+   x3 ;    0.000 ;    0.000 ;    0.500 ;    2.500 
+   x5 ;    0.000 ;   -1.000 ;    0.500 ;    0.500 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000    0.000    1.500 ]
+
+C_barra[ 1] =    5.500
+C_barra[ 2] =   -3.500
+C_barra[ 3] =    0.000
+C_barra[ 4] =    0.000
+C_barra[ 5] =    0.000
+C_barra[ 6] =    0.000
+C_barra[ 7] =    0.000
+C_barra[ 8] =    0.000
+
+Entra na base: x1
+
+P_barra[ 1]T = [    2.500   -1.500   -2.500 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x1)
+-----------------------------------------------------
+            1           x4                   1.800
+            2           x3                INFINITO
+            3           x5                INFINITO
+-----------------------------------------------------
+Sai da base: x4
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x1 ;    0.400 ;    0.000 ;   -0.200 ;    1.800 
+   x3 ;    0.600 ;    0.000 ;    0.200 ;    5.200 
+   x5 ;    1.000 ;   -1.000 ;    0.000 ;    5.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    2.200    0.000    0.400 ]
+
+C_barra[ 1] =    0.000
+C_barra[ 2] =   -4.600
+C_barra[ 3] =    0.000
+C_barra[ 4] =   -2.200
+C_barra[ 5] =    0.000
+C_barra[ 6] =    0.000
+C_barra[ 7] =    0.000
+C_barra[ 8] =    0.000
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =    1.800   (    original )
+  x2  =    0.000   (    original )
+  x3  =    5.200   ( substituta* )
+  x4  =    0.000   (       folga )
+  x5  =    5.000   (     excesso )
+  x6  =    0.000   ( substituta* )
+  x7  =    0.000   (  artificial )
+  x8  =    0.000   (  artificial )
+
+(*) substitutas para variáveis originalmente irrestritas em sinal:
+ x'3  = x3  - x6 
+
+
+Fim da execução do SIMPLEX Revisado.
+

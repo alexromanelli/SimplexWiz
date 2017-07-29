@@ -103,4 +103,70 @@ Solução encontrada:
   x4  =    0.000   (     excesso )
 
 
-Fim da execução.
+Fim da execução do SIMPLEX "normal".
+
+
+Execução do SIMPLEX Revisado:
+
+ Vetores P_i:
+ ---
+      P_1       P_2       P_3       P_4 
+ --------  --------  --------  -------- 
+   -1.000     3.000     1.000     0.000 
+    3.000    -2.000    -0.000     1.000 
+ ---
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x3 ;    1.000 ;    0.000 ;    0.000 
+   x4 ;    0.000 ;    1.000 ;    3.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000    0.000 ]
+
+C_barra[ 1] =    1.000
+C_barra[ 2] =   -1.000
+C_barra[ 3] =    0.000
+C_barra[ 4] =    0.000
+
+Entra na base: x1
+
+P_barra[ 1]T = [   -1.000    3.000 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x1)
+-----------------------------------------------------
+            1           x3                INFINITO
+            2           x4                   1.000
+-----------------------------------------------------
+Sai da base: x4
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x3 ;    1.000 ;    0.333 ;    1.000 
+   x1 ;    0.000 ;    0.333 ;    1.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000    0.333 ]
+
+C_barra[ 1] =    0.000
+C_barra[ 2] =   -0.333
+C_barra[ 3] =    0.000
+C_barra[ 4] =   -0.333
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =    1.000   (    original )
+  x2  =    0.000   (    original )
+  x3  =    1.000   (       folga )
+  x4  =    0.000   (     excesso )
+
+
+Fim da execução do SIMPLEX Revisado.
+

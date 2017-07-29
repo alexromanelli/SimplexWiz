@@ -227,7 +227,36 @@ int main() {
 	} else {
 		std::printf("\nProblema para encontrar solução ótima. Loop.");
 	}
-	std::printf("\n\nFim da execução.\n");
+	std::printf("\n\nFim da execução do SIMPLEX \"normal\".\n");
+	//delete modeloNaFormaPadrao;
+
+	std::printf("\n\nExecução do SIMPLEX Revisado:\n");
+	modeloNaFormaPadrao = modeloOriginal->obterModeloNaFormaPadrao();
+	modeloNaFormaPadrao->definirTableauInicialSimplexRevisado();
+	modeloNaFormaPadrao->imprimirTableauSimplexRevisado();
+
+	iteracoes = 0;
+	solOtima = false;
+	while (true) {
+		bool deuPasso = modeloNaFormaPadrao->executarPassoSimplexRevisado();
+		if (deuPasso) {
+			modeloNaFormaPadrao->imprimirTableauSimplexRevisado();
+			iteracoes++;
+			if (iteracoes > 10)
+				break;
+		} else {
+			solOtima = true;
+			break;
+		}
+	}
+	if (solOtima) {
+		modeloNaFormaPadrao->imprimirSolucaoTableauSimplexRevisado();
+	} else {
+		std::printf("\nProblema para encontrar solução ótima. Loop.");
+	}
+
+	std::printf("\n\nFim da execução do SIMPLEX Revisado.\n\n");
+	//delete modeloNaFormaPadrao;
 
     return 0;
 }

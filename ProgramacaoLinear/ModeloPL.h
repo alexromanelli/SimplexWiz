@@ -50,6 +50,7 @@ private:
 
 	int* indVariavelBasicaRestricao;
 
+	// -- declarações para o SIMPLEX (com variáveis artificiais e Big-M)
 	double* tableauCj;
 	double* tableauCB;
 	int* tableauBase;
@@ -58,6 +59,19 @@ private:
 	double* tableauContribuicaoLucroLiquido; // C_Barra
 	double tableauZ;
 	bool* tableauVariavelEliminada; // para o caso de eliminar variáveis artificiais
+
+	// -- declarações para o SIMPLEX Revisado (SR)
+	int* tableauSR_Base;
+	double* tableauSR_Cj;
+	double* tableauSR_CB;
+	double** tableauSR_Vetores_P;
+	double* tableauSR_Vetor_b;
+	double** tableauSR_Matriz_B;
+	double** tableauSR_Matriz_B_inversa;
+	double* tableauSR_pi;
+	double* tableauSR_C_barra;
+	double* tableauSR_Vetor_b_barra;
+	bool* tableauSR_VariavelEliminada;
 
 	/**
 	 * Faz um mapeamento entre as variáveis originais no modelo, representadas pelas linhas desta
@@ -72,6 +86,11 @@ private:
 	int adicionarVariavelFolga();
 	int adicionarVariavelExcesso();
 	bool eVariavelBasica(int indVar);
+
+	void atualizarTableauSR_CB();
+	void calcularTableauSR_MultiplicadorSimplex();
+	void calcularTableauSR_C_barra();
+	bool eVariavelBasicaSR(int indVar);
 
 	/**
 	 * Acrescenta uma nova linha na matriz de correspondência entre variáveis originais irrestritas
@@ -99,6 +118,12 @@ public:
 	void imprimirTableau();
 	double* obterSolucaoTableau();
 	void imprimirSolucaoTableau();
+
+	void definirTableauInicialSimplexRevisado();
+	bool executarPassoSimplexRevisado();
+	void imprimirTableauSimplexRevisado();
+	double* obterSolucaoTableauSimplexRevisado();
+	void imprimirSolucaoTableauSimplexRevisado();
 
 };
 

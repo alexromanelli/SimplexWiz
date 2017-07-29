@@ -62,6 +62,18 @@ ModeloPL::ModeloPL(Objetivo objetivo, int quantidadeVariaveis, double* coeficien
 	this->tableauContribuicaoLucroLiquido = NULL;
 	this->tableauVariavelEliminada = NULL;
 	this->tableauZ = 0;
+
+	this->tableauSR_Vetores_P = NULL;
+	this->tableauSR_Vetor_b = NULL;
+	this->tableauSR_Matriz_B = NULL;
+	this->tableauSR_Cj = NULL;
+	this->tableauSR_CB = NULL;
+	this->tableauSR_Matriz_B_inversa = NULL;
+	this->tableauSR_Vetor_b_barra = NULL;
+	this->tableauSR_Base = NULL;
+	this->tableauSR_C_barra = NULL;
+	this->tableauSR_pi = NULL;
+	this->tableauSR_VariavelEliminada = NULL;
 }
 
 ModeloPL::ModeloPL(ModeloPL* origem) {
@@ -124,12 +136,24 @@ ModeloPL::ModeloPL(ModeloPL* origem) {
 	this->tableauContribuicaoLucroLiquido = NULL;
 	this->tableauVariavelEliminada = NULL;
 	this->tableauZ = 0;
+
+	this->tableauSR_Vetores_P = NULL;
+	this->tableauSR_Vetor_b = NULL;
+	this->tableauSR_Matriz_B = NULL;
+	this->tableauSR_Cj = NULL;
+	this->tableauSR_CB = NULL;
+	this->tableauSR_Matriz_B_inversa = NULL;
+	this->tableauSR_Vetor_b_barra = NULL;
+	this->tableauSR_Base = NULL;
+	this->tableauSR_C_barra = NULL;
+	this->tableauSR_pi = NULL;
+	this->tableauSR_VariavelEliminada = NULL;
 }
 
 ModeloPL::~ModeloPL() {
 	delete [] this->coeficienteFuncaoObjetivo;
 
-	for (int i = 0; i < quantidadeVariaveis; i++) {
+	for (int i = 0; i < quantidadeRestricoes; i++) {
 		delete [] this->restricaoCoeficiente[i];
 	}
 	delete [] this->restricaoCoeficiente;
@@ -811,6 +835,355 @@ double* ModeloPL::obterSolucaoTableau() {
 
 void ModeloPL::imprimirSolucaoTableau() {
 	double* solucao = this->obterSolucaoTableau();
+	std::printf("\nSolução encontrada:\n");
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		std::string tipo = "";
+		switch (tipoVariavel[i]) {
+		case TipoVariavel::Artificial:
+			tipo = "artificial";
+			break;
+		case TipoVariavel::Excesso:
+			tipo = "excesso";
+			break;
+		case TipoVariavel::Folga:
+			tipo = "folga";
+			break;
+		case TipoVariavel::Original:
+			tipo = "original";
+			break;
+		case TipoVariavel::SubstitutaParaVariavelIrrestrita:
+			tipo = "substituta*";
+			break;
+		}
+		std::printf("  x%-2d = %8.3f   ( %11s )\n", i + 1, solucao[i], tipo.c_str());
+	}
+
+	if (this->correspondenciaVariaveisIrrestritas != NULL) {
+		std::printf("\n(*) substitutas para variáveis originalmente irrestritas em sinal:\n");
+		for (int i = 0; i < this->quantidadeVariaveisOriginais; i++) {
+			if (this->correspondenciaVariaveisIrrestritas[i] != NULL) {
+				std::printf(" x'%-2d = x%-2d - x%-2d\n", i + 1, this->correspondenciaVariaveisIrrestritas[i][0] + 1,
+						this->correspondenciaVariaveisIrrestritas[i][1] + 1);
+			}
+		}
+	}
+}
+
+void ModeloPL::definirTableauInicialSimplexRevisado() {
+	if (indVariavelBasicaRestricao == NULL) {
+		double* solucao = definirSolucaoBasicaFactivel();
+		delete [] solucao;
+	}
+
+	// definir vetores P
+	tableauSR_Vetores_P = new double*[quantidadeVariaveis]; // um vetor para cada variável
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		tableauSR_Vetores_P[i] = new double[quantidadeRestricoes];
+		for (int j = 0; j < quantidadeRestricoes; j++) {
+			tableauSR_Vetores_P[i][j] = restricaoCoeficiente[j][i];
+		}
+	}
+
+	// imprimir Pi
+	std::printf("\n Vetores P_i:\n ---\n");
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		char str[12];
+		sprintf(str, "P_%d", i + 1);
+		std::printf(" %8s ", str);
+	}
+	std::printf("\n");
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		std::printf(" -------- ");
+	}
+	std::printf("\n");
+	for (int j = 0; j < quantidadeRestricoes; j++) {
+		for (int i = 0; i < quantidadeVariaveis; i++) {
+			std::printf(" %8.3f ", tableauSR_Vetores_P[i][j]);
+		}
+		std::printf("\n");
+	}
+	std::printf(" ---\n");
+
+	// definir vetor b
+	tableauSR_Vetor_b = new double[quantidadeRestricoes];
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		tableauSR_Vetor_b[i] = restricaoConstanteLadoDireito[i];
+	}
+
+	// definir matriz B
+	tableauSR_Matriz_B = new double*[quantidadeRestricoes];
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		tableauSR_Matriz_B[i] = new double[quantidadeRestricoes];
+		for (int j = 0; j < quantidadeRestricoes; j++) {
+			tableauSR_Matriz_B[i][j] = i == j ? 1 : 0; // matriz B inicial é a identidade
+		}
+	}
+
+	// definir vetor Cj
+	tableauSR_Cj = new double[quantidadeVariaveis];
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		tableauSR_Cj[i] = coeficienteFuncaoObjetivo[i];
+		// Big-M
+		if (tipoVariavel[i] == TipoVariavel::Artificial)
+			tableauSR_Cj[i] = objetivo == Objetivo::min ? M : -M;
+	}
+
+	// definir vetor Base
+	tableauSR_Base = new int[quantidadeRestricoes];
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		tableauSR_Base[i] = indVariavelBasicaRestricao[i];
+	}
+
+	// definir vetor CB
+	tableauSR_CB = new double[quantidadeRestricoes];
+	atualizarTableauSR_CB();
+
+	// inicializar matriz B inversa
+	tableauSR_Matriz_B_inversa = new double*[quantidadeRestricoes];
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		tableauSR_Matriz_B_inversa[i] = new double[quantidadeRestricoes];
+		for (int j = 0; j < quantidadeRestricoes; j++) {
+			tableauSR_Matriz_B_inversa[i][j] = i == j ? 1 : 0; // a inversa da matriz B é a identidade, porque B = I (inicialmente)
+		}
+	}
+
+	// inicializar pi (multiplicador Simplex)
+	tableauSR_pi = new double[quantidadeRestricoes];
+
+	// inicializar C_barra
+	tableauSR_C_barra = new double[quantidadeVariaveis];
+
+	// inicializar b_barra
+	tableauSR_Vetor_b_barra = new double[quantidadeRestricoes];
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		tableauSR_Vetor_b_barra[i] = tableauSR_Vetor_b[i];
+	}
+
+	// inicializar vetor de variáveis artificiais eliminadas
+	tableauSR_VariavelEliminada = new bool[quantidadeVariaveis];
+	for (int i = 0; i < quantidadeVariaveis; i++)
+		tableauSR_VariavelEliminada[i] = false;
+}
+
+bool ModeloPL::executarPassoSimplexRevisado() {
+	std::printf("\n Iteração SIMPLEX Revisado:\n");
+
+	// calcular pi (multiplicador Simplex)
+	calcularTableauSR_MultiplicadorSimplex();
+	std::printf("\nMultiplicador SIMPLEX: pi = [ ");
+	for (int i = 0; i < quantidadeRestricoes; i++)
+		if (tableauSR_pi[i] < -1000000 || tableauSR_pi[i] > 1000000)
+			std::printf(" %+.0e ", tableauSR_pi[i]);
+		else
+			std::printf("%8.3f ", tableauSR_pi[i]);
+	std::printf("]\n");
+
+	// calcular C_barra
+	calcularTableauSR_C_barra();
+	bool haVariavelArtificialNaBase = false;
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		if (tipoVariavel[tableauSR_Base[i]] == TipoVariavel::Artificial) {
+			haVariavelArtificialNaBase = true;
+			break;
+		}
+	}
+	std::printf("\n");
+	for (int i = 0; i < quantidadeVariaveis; i++)
+		if (haVariavelArtificialNaBase) {
+			std::printf("C_barra[%2d] = %+.5e\n", i + 1, tableauSR_C_barra[i]);
+		}
+		else
+			std::printf("C_barra[%2d] = %8.3f\n", i + 1, tableauSR_C_barra[i]);
+
+	// verificar se há melhoria
+	bool haMelhoria = false;
+	int indMaiorMelhoria = -1;
+	double valorMaiorMelhoria = 0;
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		if (tableauSR_VariavelEliminada[i]) // ignora variável artificial eliminada
+			continue;
+		if (eVariavelBasicaSR(i))
+			continue;
+		if (objetivo == Objetivo::max) {
+			if (tableauSR_C_barra[i] > 0) {
+				haMelhoria = true;
+				if (tableauSR_C_barra[i] > valorMaiorMelhoria) {
+					indMaiorMelhoria = i;
+					valorMaiorMelhoria = tableauSR_C_barra[i];
+				}
+			}
+		} else {
+			if (tableauSR_C_barra[i] < 0) {
+				haMelhoria = true;
+				if (tableauSR_C_barra[i] < valorMaiorMelhoria) {
+					indMaiorMelhoria = i;
+					valorMaiorMelhoria = tableauSR_C_barra[i];
+				}
+			}
+		}
+	}
+
+	if (haMelhoria) {
+		// identificar qual variável entra na base
+		std::printf("\nEntra na base: x%d\n", indMaiorMelhoria + 1);
+
+		// calcular P_barra para variável que entra na base P_barra[i] = Inv(B) * P[i]
+		double* p_barra = new double[quantidadeRestricoes];
+		std::printf("\nP_barra[%2d]T = [ ", indMaiorMelhoria + 1);
+		for (int i = 0; i < quantidadeRestricoes; i++) {
+			double item = 0;
+			for (int j = 0; j < quantidadeRestricoes; j++) {
+				item += tableauSR_Matriz_B_inversa[i][j] * tableauSR_Vetores_P[indMaiorMelhoria][j];
+			}
+			p_barra[i] = item;
+			std::printf("%8.3f ", item);
+		}
+		std::printf("]\n");
+
+		// escolher variável que sai da base pela regra da razão mínima:
+		std::printf("\nNum. da linha  Var. básica  Razão(lim.sup.sobre x%d)\n", indMaiorMelhoria + 1);
+		std::printf("-----------------------------------------------------\n");
+		double razaoMinima = std::numeric_limits<double>::max();
+		int indLinhaRazaoMinima = -1;
+		for (int i = 0; i < quantidadeRestricoes; i++) {
+			char str[12];
+			sprintf(str, "x%d", tableauSR_Base[i] + 1);
+
+			if (p_barra[i] > 0) {
+				double razao = tableauSR_Vetor_b_barra[i] / p_barra[i];
+				if (razao < razaoMinima) {
+					razaoMinima = razao;
+					indLinhaRazaoMinima = i;
+				}
+				std::printf("%13d %12s %23.3f\n", i + 1, str, razao);
+			} else {
+				std::printf("%13d %12s                INFINITO\n", i + 1, str);
+			}
+		}
+		std::printf("-----------------------------------------------------\n");
+
+		std::printf("Sai da base: x%d\n", tableauSR_Base[indLinhaRazaoMinima] + 1);
+
+		// fazer pivoteamento, aplicando-o ao tableau, para coluna P_barra da variável entrante ser coluna da identidade
+		// para isso, a linha "indLinhaRazaoMinima" deve ser transformada em 1 e as outras, em 0
+		double coef = p_barra[indLinhaRazaoMinima];
+		//p_barra[indLinhaRazaoMinima] = 1;
+		for (int i = 0; i < quantidadeRestricoes; i++) {
+			tableauSR_Matriz_B_inversa[indLinhaRazaoMinima][i] /= coef;
+		}
+		tableauSR_Vetor_b_barra[indLinhaRazaoMinima] /= coef;
+		for (int i = 0; i < quantidadeRestricoes; i++) {
+			if (i == indLinhaRazaoMinima)
+				continue;
+			coef = p_barra[i];
+			//p_barra[i] = 0;
+			for (int j = 0; j < quantidadeRestricoes; j++) {
+				tableauSR_Matriz_B_inversa[i][j] -= coef * tableauSR_Matriz_B_inversa[indLinhaRazaoMinima][j];
+			}
+			tableauSR_Vetor_b_barra[i] -= coef * tableauSR_Vetor_b_barra[indLinhaRazaoMinima];
+		}
+
+		// elimina variável que sai da base, se for artificial
+		if (tipoVariavel[tableauSR_Base[indLinhaRazaoMinima]] == TipoVariavel::Artificial)
+			tableauSR_VariavelEliminada[tableauSR_Base[indLinhaRazaoMinima]] = true;
+
+		// troca variáveis na base
+		tableauSR_Base[indLinhaRazaoMinima] = indMaiorMelhoria;
+		atualizarTableauSR_CB();
+	} else {
+		std::printf("\nNão há melhoria possível.\n");
+	}
+
+	return haMelhoria;
+}
+
+void ModeloPL::imprimirTableauSimplexRevisado() {
+	// imprimir cabeçalho tableau
+	std::printf("\n");
+	std::printf(" Tableau SIMPLEX Revisado (%s)\n", objetivo == Objetivo::max ? "MAX" : "MIN");
+	std::printf(" ---\n");
+	std::printf(" Base ; Inv(B)   ;");
+	for (int i = 1; i < quantidadeRestricoes; i++)
+		std::printf("          ;");
+	std::printf("  b_barra \n");
+
+	// imprimir linhas tableau
+	for (int j = 0; j < quantidadeRestricoes; j++) {
+		char str[4];
+		sprintf(str, "x%d", tableauSR_Base[j] + 1);
+		std::printf(" %4s ;", str);
+		for (int i = 0; i < quantidadeRestricoes; i++) {
+			std::printf(" %8.3f ;", tableauSR_Matriz_B_inversa[j][i]);
+		}
+		std::printf(" %8.3f \n", tableauSR_Vetor_b_barra[j]);
+	}
+	std::printf(" ---\n");
+//	for (int j = 0; j < quantidadeRestricoes; j++) {
+//		std::printf(" P_barra[%2d]T = [ ", tableauSR_Base[j] + 1);
+//		for (int i = 0; i < quantidadeRestricoes; i++) {
+//			std::printf("%8.3f ", tableauSR_Matriz_B_inversa[i][j]);
+//		}
+//		std::printf("]\n");
+//	}
+//	std::printf(" ---\n");
+//	std::printf("\n");
+}
+
+double* ModeloPL::obterSolucaoTableauSimplexRevisado() {
+	double* solucao = new double[quantidadeVariaveis];
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		solucao[i] = 0;
+	}
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		solucao[tableauSR_Base[i]] = tableauSR_Vetor_b_barra[i];
+	}
+	return solucao;
+}
+
+void ModeloPL::atualizarTableauSR_CB() {
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		tableauSR_CB[i] = tableauSR_Cj[tableauSR_Base[i]];
+	}
+}
+
+void ModeloPL::calcularTableauSR_MultiplicadorSimplex() {
+	// C_B * B_inversa
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		double item = 0;
+		for (int j = 0; j < quantidadeRestricoes; j++) {
+			item += tableauSR_CB[j] * tableauSR_Matriz_B_inversa[j][i];
+		}
+		tableauSR_pi[i] = item;
+	}
+}
+
+void ModeloPL::calcularTableauSR_C_barra() {
+	for (int i = 0; i < quantidadeVariaveis; i++) {
+		if (eVariavelBasicaSR(i)) {
+			tableauSR_C_barra[i] = 0;
+			continue; // não é necessário calcular C_barra de variável básica
+		} else if (tableauSR_VariavelEliminada[i]) {
+			tableauSR_C_barra[i] = 0;
+			continue;
+		}
+		double prod = 0;
+		for (int j = 0; j < quantidadeRestricoes; j++) {
+			prod += tableauSR_pi[j] * tableauSR_Vetores_P[i][j];
+		}
+		tableauSR_C_barra[i] = tableauSR_Cj[i] - prod;
+	}
+}
+
+bool ModeloPL::eVariavelBasicaSR(int indVar) {
+	for (int i = 0; i < quantidadeRestricoes; i++) {
+		if (tableauSR_Base[i] == indVar)
+			return true;
+	}
+	return false;
+}
+
+void ModeloPL::imprimirSolucaoTableauSimplexRevisado() {
+	double* solucao = this->obterSolucaoTableauSimplexRevisado();
 	std::printf("\nSolução encontrada:\n");
 	for (int i = 0; i < quantidadeVariaveis; i++) {
 		std::string tipo = "";

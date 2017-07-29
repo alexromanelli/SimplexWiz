@@ -135,4 +135,111 @@ Solução encontrada:
   x6  =  100.000   (       folga )
 
 
-Fim da execução.
+Fim da execução do SIMPLEX "normal".
+
+
+Execução do SIMPLEX Revisado:
+
+ Vetores P_i:
+ ---
+      P_1       P_2       P_3       P_4       P_5       P_6 
+ --------  --------  --------  --------  --------  -------- 
+    1.000     1.000     1.000     1.000     0.000     0.000 
+   10.000     4.000     5.000     0.000     1.000     0.000 
+    2.000     2.000     6.000     0.000     0.000     1.000 
+ ---
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x4 ;    1.000 ;    0.000 ;    0.000 ;  100.000 
+   x5 ;    0.000 ;    1.000 ;    0.000 ;  600.000 
+   x6 ;    0.000 ;    0.000 ;    1.000 ;  300.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000    0.000    0.000 ]
+
+C_barra[ 1] =   10.000
+C_barra[ 2] =    6.000
+C_barra[ 3] =    4.000
+C_barra[ 4] =    0.000
+C_barra[ 5] =    0.000
+C_barra[ 6] =    0.000
+
+Entra na base: x1
+
+P_barra[ 1]T = [    1.000   10.000    2.000 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x1)
+-----------------------------------------------------
+            1           x4                 100.000
+            2           x5                  60.000
+            3           x6                 150.000
+-----------------------------------------------------
+Sai da base: x5
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x4 ;    1.000 ;   -0.100 ;    0.000 ;   40.000 
+   x1 ;    0.000 ;    0.100 ;    0.000 ;   60.000 
+   x6 ;    0.000 ;   -0.200 ;    1.000 ;  180.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    0.000    1.000    0.000 ]
+
+C_barra[ 1] =    0.000
+C_barra[ 2] =    2.000
+C_barra[ 3] =   -1.000
+C_barra[ 4] =    0.000
+C_barra[ 5] =   -1.000
+C_barra[ 6] =    0.000
+
+Entra na base: x2
+
+P_barra[ 2]T = [    0.600    0.400    1.200 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x2)
+-----------------------------------------------------
+            1           x4                  66.667
+            2           x1                 150.000
+            3           x6                 150.000
+-----------------------------------------------------
+Sai da base: x4
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;          ;  b_barra 
+   x2 ;    1.667 ;   -0.167 ;    0.000 ;   66.667 
+   x1 ;   -0.667 ;    0.167 ;    0.000 ;   33.333 
+   x6 ;   -2.000 ;    0.000 ;    1.000 ;  100.000 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [    3.333    0.667    0.000 ]
+
+C_barra[ 1] =    0.000
+C_barra[ 2] =    0.000
+C_barra[ 3] =   -2.667
+C_barra[ 4] =   -3.333
+C_barra[ 5] =   -0.667
+C_barra[ 6] =    0.000
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =   33.333   (    original )
+  x2  =   66.667   (    original )
+  x3  =    0.000   (    original )
+  x4  =    0.000   (       folga )
+  x5  =    0.000   (       folga )
+  x6  =  100.000   (       folga )
+
+
+Fim da execução do SIMPLEX Revisado.
+
