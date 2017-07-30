@@ -1,0 +1,169 @@
+
+-------- Modelo: "Modelo original" --------
+
+MAX Z =       +1 x1        -1 x2  
+
+sujeito a:
+              -1 x1        +3 x2    <=        +0
+              -3 x1        +2 x2    >=        -3
+
+
+limites:
+ x1   >=        +0
+ x2   >=        +0
+
+-------- Fim-Modelo --------
+
+
+-------- Modelo: "Modelo na forma padrão" --------
+
+MAX Z =       +1 x1        -1 x2                            
+
+sujeito a:
+              -1 x1        +3 x2        +1 x3                 =         +0
+              +3 x1        -2 x2                     +1 x4    =         +3
+
+
+limites:
+ x1   >=        +0
+ x2   >=        +0
+ x3   >=        +0
+ x4   >=        +0
+
+variável de folga:    x3
+
+variável de excesso:  x4
+
+-------- Fim-Modelo --------
+
+
+-------- Modelo: "Modelo na forma padrão após definir solução básica factível" --------
+
+MAX Z =       +1 x1        -1 x2                            
+
+sujeito a:
+              -1 x1        +3 x2        +1 x3                 =         +0
+              +3 x1        -2 x2                     +1 x4    =         +3
+
+
+limites:
+ x1   >=        +0
+ x2   >=        +0
+ x3   >=        +0
+ x4   >=        +0
+
+variável de folga:    x3
+
+variável de excesso:  x4
+
+-------- Fim-Modelo --------
+
+
+ Solução básica factível:
+  x1  =       +0
+  x2  =       +0
+  x3  =       +0
+  x4  =       +3
+
+(MAX)            |     |       +1        -1        +0        +0  |
+                 | C_j +-----------------------------------------+
+      C_B | Base |     |       x1        x2        x3        x4  | Constantes
+----------+------+-----+-----------------------------------------+-------------
+       +0 |   x3 |     |       -1        +3        +1        +0  |       +0
+       +0 |   x4 |     |       +3        -2        +0        +1  |       +3
+----------+------+-----+-----------------------------------------+-------------
+    Contribuição lucro |       +1        -1        +0        +0  | Z =       +0
+----------+------+-----+-----------------------------------------+-------------
+
+Entra na base: x1
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x1)
+-----------------------------------------------------
+            1           x3                INFINITO
+            2           x4                      +1
+-----------------------------------------------------
+Sai da base: x4
+
+(MAX)            |     |       +1        -1        +0        +0  |
+                 | C_j +-----------------------------------------+
+      C_B | Base |     |       x1        x2        x3        x4  | Constantes
+----------+------+-----+-----------------------------------------+-------------
+       +0 |   x3 |     |       +0      +7/3        +1      +1/3  |       +1
+       +1 |   x1 |     |       +1      -2/3        +0      +1/3  |       +1
+----------+------+-----+-----------------------------------------+-------------
+    Contribuição lucro |       +0      -1/3        +0      -1/3  | Z =       +1
+----------+------+-----+-----------------------------------------+-------------
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =       +1   (    original )
+  x2  =       +0   (    original )
+  x3  =       +1   (       folga )
+  x4  =       +0   (     excesso )
+
+
+Fim da execução do SIMPLEX "normal".
+
+
+Execução do SIMPLEX Revisado:
+
+ Vetores P_i:
+      P_1 ;      P_2 ;      P_3 ;      P_4 ;
+       -1 ;       +3 ;       +1 ;       +0 ;
+       +3 ;       -2 ;       +0 ;       +1 ;
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x3 ;       +1 ;       +0 ;       +0 
+   x4 ;       +0 ;       +1 ;       +3 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [       +0 ;       +0 ; ]
+
+C_barra[ 1] =       +1
+C_barra[ 2] =       -1
+C_barra[ 3] =       +0
+C_barra[ 4] =       +0
+
+Entra na base: x1
+
+P_barra[ 1]^T = [       -1       +3 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x1)
+-----------------------------------------------------
+            1           x3                INFINITO
+            2           x4                      +1
+-----------------------------------------------------
+Sai da base: x4
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x3 ;       +1 ;     +1/3 ;       +1 
+   x1 ;       +0 ;     +1/3 ;       +1 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [       +0 ;     +1/3 ; ]
+
+C_barra[ 1] =       +0
+C_barra[ 2] =     -1/3
+C_barra[ 3] =       +0
+C_barra[ 4] =     -1/3
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =       +1   (    original )
+  x2  =       +0   (    original )
+  x3  =       +1   (       folga )
+  x4  =       +0   (     excesso )
+
+
+Fim da execução do SIMPLEX Revisado.
+

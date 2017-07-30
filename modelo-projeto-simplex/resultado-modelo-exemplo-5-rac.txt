@@ -1,0 +1,218 @@
+
+-------- Modelo: "Modelo original" --------
+
+MAX Z =       +5 x1        +2 x2        +3 x3        -1 x4        +1 x5  
+
+sujeito a:
+              +1 x1        +2 x2        +2 x3        +1 x4                 =         +8
+              +3 x1        +4 x2        +1 x3                     +1 x5    =         +7
+
+
+limites:
+ x1   >=        +0
+ x2   >=        +0
+ x3   >=        +0
+ x4   >=        +0
+ x5   >=        +0
+
+-------- Fim-Modelo --------
+
+
+-------- Modelo: "Modelo na forma padrão" --------
+
+MAX Z =       +5 x1        +2 x2        +3 x3        -1 x4        +1 x5  
+
+sujeito a:
+              +1 x1        +2 x2        +2 x3        +1 x4                 =         +8
+              +3 x1        +4 x2        +1 x3                     +1 x5    =         +7
+
+
+limites:
+ x1   >=        +0
+ x2   >=        +0
+ x3   >=        +0
+ x4   >=        +0
+ x5   >=        +0
+
+-------- Fim-Modelo --------
+
+
+-------- Modelo: "Modelo na forma padrão após definir solução básica factível" --------
+
+MAX Z =       +5 x1        +2 x2        +3 x3        -1 x4        +1 x5  
+
+sujeito a:
+              +1 x1        +2 x2        +2 x3        +1 x4                 =         +8
+              +3 x1        +4 x2        +1 x3                     +1 x5    =         +7
+
+
+limites:
+ x1   >=        +0
+ x2   >=        +0
+ x3   >=        +0
+ x4   >=        +0
+ x5   >=        +0
+
+-------- Fim-Modelo --------
+
+
+ Solução básica factível:
+  x1  =       +0
+  x2  =       +0
+  x3  =       +0
+  x4  =       +8
+  x5  =       +7
+
+(MAX)            |     |       +5        +2        +3        -1        +1  |
+                 | C_j +---------------------------------------------------+
+      C_B | Base |     |       x1        x2        x3        x4        x5  | Constantes
+----------+------+-----+---------------------------------------------------+-------------
+       -1 |   x4 |     |       +1        +2        +2        +1        +0  |       +8
+       +1 |   x5 |     |       +3        +4        +1        +0        +1  |       +7
+----------+------+-----+---------------------------------------------------+-------------
+    Contribuição lucro |       +3        +0        +4        +0        +0  | Z =       -1
+----------+------+-----+---------------------------------------------------+-------------
+
+Entra na base: x3
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x3)
+-----------------------------------------------------
+            1           x4                      +4
+            2           x5                      +7
+-----------------------------------------------------
+Sai da base: x4
+
+(MAX)            |     |       +5        +2        +3        -1        +1  |
+                 | C_j +---------------------------------------------------+
+      C_B | Base |     |       x1        x2        x3        x4        x5  | Constantes
+----------+------+-----+---------------------------------------------------+-------------
+       +3 |   x3 |     |     +1/2        +1        +1      +1/2        +0  |       +4
+       +1 |   x5 |     |     +5/2        +3        +0      -1/2        +1  |       +3
+----------+------+-----+---------------------------------------------------+-------------
+    Contribuição lucro |       +1        -4        +0        -2        +0  | Z =      +15
+----------+------+-----+---------------------------------------------------+-------------
+
+Entra na base: x1
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x1)
+-----------------------------------------------------
+            1           x3                      +8
+            2           x5                    +6/5
+-----------------------------------------------------
+Sai da base: x5
+
+(MAX)            |     |       +5        +2        +3        -1        +1  |
+                 | C_j +---------------------------------------------------+
+      C_B | Base |     |       x1        x2        x3        x4        x5  | Constantes
+----------+------+-----+---------------------------------------------------+-------------
+       +3 |   x3 |     |       +0      +2/5        +1      +3/5      -1/5  |    +17/5
+       +5 |   x1 |     |       +1      +6/5        +0      -1/5      +2/5  |     +6/5
+----------+------+-----+---------------------------------------------------+-------------
+    Contribuição lucro |       +0     -26/5        +0      -9/5      -2/5  | Z =    +81/5
+----------+------+-----+---------------------------------------------------+-------------
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =     +6/5   (    original )
+  x2  =       +0   (    original )
+  x3  =    +17/5   (    original )
+  x4  =       +0   (    original )
+  x5  =       +0   (    original )
+
+
+Fim da execução do SIMPLEX "normal".
+
+
+Execução do SIMPLEX Revisado:
+
+ Vetores P_i:
+      P_1 ;      P_2 ;      P_3 ;      P_4 ;      P_5 ;
+       +1 ;       +2 ;       +2 ;       +1 ;       +0 ;
+       +3 ;       +4 ;       +1 ;       +0 ;       +1 ;
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x4 ;       +1 ;       +0 ;       +8 
+   x5 ;       +0 ;       +1 ;       +7 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [       -1 ;       +1 ; ]
+
+C_barra[ 1] =       +3
+C_barra[ 2] =       +0
+C_barra[ 3] =       +4
+C_barra[ 4] =       +0
+C_barra[ 5] =       +0
+
+Entra na base: x3
+
+P_barra[ 3]^T = [       +2       +1 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x3)
+-----------------------------------------------------
+            1           x4                      +4
+            2           x5                      +7
+-----------------------------------------------------
+Sai da base: x4
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x3 ;     +1/2 ;       +0 ;       +4 
+   x5 ;     -1/2 ;       +1 ;       +3 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [       +1 ;       +1 ; ]
+
+C_barra[ 1] =       +1
+C_barra[ 2] =       -4
+C_barra[ 3] =       +0
+C_barra[ 4] =       -2
+C_barra[ 5] =       +0
+
+Entra na base: x1
+
+P_barra[ 1]^T = [     +1/2     +5/2 ]
+
+Num. da linha  Var. básica  Razão(lim.sup.sobre x1)
+-----------------------------------------------------
+            1           x3                      +8
+            2           x5                    +6/5
+-----------------------------------------------------
+Sai da base: x5
+
+ Tableau SIMPLEX Revisado (MAX)
+ ---
+ Base ; Inv(B)   ;          ;  b_barra 
+   x3 ;     +3/5 ;     -1/5 ;    +17/5 
+   x1 ;     -1/5 ;     +2/5 ;     +6/5 
+ ---
+
+ Iteração SIMPLEX Revisado:
+
+Multiplicador SIMPLEX: pi = [     +4/5 ;     +7/5 ; ]
+
+C_barra[ 1] =       +0
+C_barra[ 2] =    -26/5
+C_barra[ 3] =       +0
+C_barra[ 4] =     -9/5
+C_barra[ 5] =     -2/5
+
+Não há melhoria possível.
+
+Solução encontrada:
+  x1  =     +6/5   (    original )
+  x2  =       +0   (    original )
+  x3  =    +17/5   (    original )
+  x4  =       +0   (    original )
+  x5  =       +0   (    original )
+
+
+Fim da execução do SIMPLEX Revisado.
+

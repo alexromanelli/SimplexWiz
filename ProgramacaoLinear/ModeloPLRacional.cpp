@@ -1092,20 +1092,20 @@ void ModeloPL_Racional::imprimirTableauSimplexRevisado() {
 	std::printf("\n");
 	std::printf(" Tableau SIMPLEX Revisado (%s)\n", objetivo == Objetivo::max ? "MAX" : "MIN");
 	std::printf(" ---\n");
-	std::printf("Base;Inv(B);");
+	std::printf(" Base ; Inv(B)   ;");
 	for (int i = 1; i < quantidadeRestricoes; i++)
-		std::printf(" ;");
-	std::printf("b_barra \n");
+		std::printf("          ;");
+	std::printf("  b_barra \n");
 
 	// imprimir linhas tableau
 	for (int j = 0; j < quantidadeRestricoes; j++) {
 		char str[4];
 		sprintf(str, "x%d", tableauSR_Base[j] + 1);
-		std::printf("%s;", str);
+		std::printf(" %4s ;", str);
 		for (int i = 0; i < quantidadeRestricoes; i++) {
-			std::printf("%s;", tableauSR_Matriz_B_inversa[j][i].toString().c_str());
+			std::printf(" %8s ;", tableauSR_Matriz_B_inversa[j][i].toString().c_str());
 		}
-		std::printf("%s\n", tableauSR_Vetor_b_barra[j].toString().c_str());
+		std::printf(" %8s \n", tableauSR_Vetor_b_barra[j].toString().c_str());
 	}
 	std::printf(" ---\n");
 }
