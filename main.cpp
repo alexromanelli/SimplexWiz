@@ -10,7 +10,8 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "ProgramacaoLinear/ModeloPL.h"
+//#include "ProgramacaoLinear/ModeloPL.h"
+#include "ProgramacaoLinear/ModeloPLRacional.h"
 #include "ProgramacaoLinear/Util/NumeroRacional.h"
 
 //std::vector<std::string>* splitBySpaces(std::string& str) {
@@ -66,7 +67,127 @@ void splitBySpaces(std::string* linha, std::vector<std::string>* elem) {
  * +--------------------------------------+
  */
 
-ModeloPL* lerModeloProgramacaoLinear() {
+//ModeloPL* lerModeloProgramacaoLinear() {
+//	std::string* linha = new std::string("");
+//	std::vector<std::string>* elem = new std::vector<std::string>();
+//
+//	std::getline(std::cin, *linha, '\n');
+//    splitBySpaces(linha, elem);
+//    int quantidadeVariaveis = atoi((*elem)[1].c_str());
+//
+//    std::getline(std::cin, *linha, '\n');
+//    splitBySpaces(linha, elem);
+//    Objetivo objetivo = Objetivo::max; // valor default arbitrário
+//    if ((*elem)[1].compare("min") == 0) {
+//    	objetivo = Objetivo::min;
+//    } else if ((*elem)[1].compare("max") == 0) {
+//    	objetivo = Objetivo::max;
+//    }
+//
+//    double* coeficientesFuncaoObjetivo = new double[quantidadeVariaveis];
+//    std::getline(std::cin, *linha, '\n');
+//    splitBySpaces(linha, elem);
+//    for (int i = 0; i < quantidadeVariaveis; i++) {
+//    	coeficientesFuncaoObjetivo[i] = atof((*elem)[i + 1].c_str());
+//    }
+//
+//    std::getline(std::cin, *linha, '\n');
+//    splitBySpaces(linha, elem);
+//    int quantidadeRestricoes = atoi((*elem)[1].c_str());
+//
+//    // declaração de variáveis para os dados das restrições
+//    double** matrizCoeficientes = new double*[quantidadeRestricoes];
+//    for (int i = 0; i < quantidadeRestricoes; i++)
+//    	matrizCoeficientes[i] = new double[quantidadeVariaveis];
+//    double* vetorConstantes = new double[quantidadeRestricoes];
+//    OperadorRelacional* operadorRelacional = new OperadorRelacional[quantidadeRestricoes];
+//
+//    // obter cada restrição
+//    for (int i = 0; i < quantidadeRestricoes; i++) {
+//        std::getline(std::cin, *linha, '\n');
+//        splitBySpaces(linha, elem);
+//
+//        // obter coeficientes das variáveis
+//        for (int j = 0; j < quantidadeVariaveis; j++) {
+//        	matrizCoeficientes[i][j] = atof((*elem)[j].c_str());
+//        }
+//
+//        // obter operador relacional
+//        if ((*elem)[quantidadeVariaveis].compare("<") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::Menor;
+//        } else if ((*elem)[quantidadeVariaveis].compare("<=") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::MenorOuIgual;
+//        } else if ((*elem)[quantidadeVariaveis].compare("=") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::Igual;
+//        } else if ((*elem)[quantidadeVariaveis].compare(">=") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::MaiorOuIgual;
+//        } else if ((*elem)[quantidadeVariaveis].compare(">") == 0) {
+//            operadorRelacional[i] = OperadorRelacional::Maior;
+//        }
+//
+//        // obter constante do lado direito
+//        vetorConstantes[i] = atof((*elem)[quantidadeVariaveis + 1].c_str());
+//    }
+//
+//    // salta linha com texto "limites-variaveis:"
+//    std::getline(std::cin, *linha);
+//
+//    // declaração de estruturas para os limites das variáveis
+//    OperadorRelacional* limiteVariavelRelacao = new OperadorRelacional[quantidadeVariaveis];
+//    double* limiteVariavelConstante = new double[quantidadeVariaveis];
+//
+//    // obter limites de variáveis
+//    for (int i = 0; i < quantidadeVariaveis; i++) {
+//    	std::getline(std::cin, *linha, '\n');
+//    	splitBySpaces(linha, elem);
+//
+//    	// obter índice da variável
+//    	int indVariavel = atoi((*elem)[0].c_str()) - 1;
+//
+//        // obter operador relacional
+//    	OperadorRelacional op = OperadorRelacional::Irrestrito; // valor default arbitrário
+//        if ((*elem)[1].compare("<") == 0) {
+//        	op = OperadorRelacional::Menor;
+//        } else if ((*elem)[1].compare("<=") == 0) {
+//        	op = OperadorRelacional::MenorOuIgual;
+//        } else if ((*elem)[1].compare("=") == 0) {
+//        	op = OperadorRelacional::Igual;
+//        } else if ((*elem)[1].compare(">=") == 0) {
+//        	op = OperadorRelacional::MaiorOuIgual;
+//        } else if ((*elem)[1].compare(">") == 0) {
+//        	op = OperadorRelacional::Maior;
+//        } else if ((*elem)[1].compare("irr") == 0) {
+//        	op = OperadorRelacional::Irrestrito;
+//        }
+//
+//        // obter constante do lado direito
+//        double cons = 0;
+//        if (op != OperadorRelacional::Irrestrito)
+//        	cons = atof((*elem)[2].c_str());
+//
+//        limiteVariavelRelacao[indVariavel] = op;
+//        limiteVariavelConstante[indVariavel] = cons;
+//    }
+//
+//    ModeloPL* modelo = new ModeloPL(objetivo, quantidadeVariaveis, coeficientesFuncaoObjetivo, quantidadeRestricoes,
+//    		matrizCoeficientes, operadorRelacional, vetorConstantes, limiteVariavelRelacao, limiteVariavelConstante);
+//
+//    delete [] coeficientesFuncaoObjetivo;
+//    for (int i = 0; i < quantidadeRestricoes; i++)
+//    	delete [] matrizCoeficientes[i];
+//    delete [] matrizCoeficientes;
+//    delete [] vetorConstantes;
+//    delete [] operadorRelacional;
+//    delete [] limiteVariavelRelacao;
+//    delete [] limiteVariavelConstante;
+//
+//    delete linha;
+//    delete elem;
+//
+//    return modelo;
+//}
+
+ModeloPL_Racional* lerModeloProgramacaoLinear_Racional() {
 	std::string* linha = new std::string("");
 	std::vector<std::string>* elem = new std::vector<std::string>();
 
@@ -83,11 +204,11 @@ ModeloPL* lerModeloProgramacaoLinear() {
     	objetivo = Objetivo::max;
     }
 
-    double* coeficientesFuncaoObjetivo = new double[quantidadeVariaveis];
+    NumeroRacional* coeficientesFuncaoObjetivo = new NumeroRacional[quantidadeVariaveis];
     std::getline(std::cin, *linha, '\n');
     splitBySpaces(linha, elem);
     for (int i = 0; i < quantidadeVariaveis; i++) {
-    	coeficientesFuncaoObjetivo[i] = atof((*elem)[i + 1].c_str());
+    	coeficientesFuncaoObjetivo[i] = atoi((*elem)[i + 1].c_str());
     }
 
     std::getline(std::cin, *linha, '\n');
@@ -95,10 +216,10 @@ ModeloPL* lerModeloProgramacaoLinear() {
     int quantidadeRestricoes = atoi((*elem)[1].c_str());
 
     // declaração de variáveis para os dados das restrições
-    double** matrizCoeficientes = new double*[quantidadeRestricoes];
+    NumeroRacional** matrizCoeficientes = new NumeroRacional*[quantidadeRestricoes];
     for (int i = 0; i < quantidadeRestricoes; i++)
-    	matrizCoeficientes[i] = new double[quantidadeVariaveis];
-    double* vetorConstantes = new double[quantidadeRestricoes];
+    	matrizCoeficientes[i] = new NumeroRacional[quantidadeVariaveis];
+    NumeroRacional* vetorConstantes = new NumeroRacional[quantidadeRestricoes];
     OperadorRelacional* operadorRelacional = new OperadorRelacional[quantidadeRestricoes];
 
     // obter cada restrição
@@ -108,7 +229,7 @@ ModeloPL* lerModeloProgramacaoLinear() {
 
         // obter coeficientes das variáveis
         for (int j = 0; j < quantidadeVariaveis; j++) {
-        	matrizCoeficientes[i][j] = atof((*elem)[j].c_str());
+        	matrizCoeficientes[i][j] = atoi((*elem)[j].c_str());
         }
 
         // obter operador relacional
@@ -125,7 +246,7 @@ ModeloPL* lerModeloProgramacaoLinear() {
         }
 
         // obter constante do lado direito
-        vetorConstantes[i] = atof((*elem)[quantidadeVariaveis + 1].c_str());
+        vetorConstantes[i] = atoi((*elem)[quantidadeVariaveis + 1].c_str());
     }
 
     // salta linha com texto "limites-variaveis:"
@@ -133,7 +254,7 @@ ModeloPL* lerModeloProgramacaoLinear() {
 
     // declaração de estruturas para os limites das variáveis
     OperadorRelacional* limiteVariavelRelacao = new OperadorRelacional[quantidadeVariaveis];
-    double* limiteVariavelConstante = new double[quantidadeVariaveis];
+    NumeroRacional* limiteVariavelConstante = new NumeroRacional[quantidadeVariaveis];
 
     // obter limites de variáveis
     for (int i = 0; i < quantidadeVariaveis; i++) {
@@ -160,15 +281,15 @@ ModeloPL* lerModeloProgramacaoLinear() {
         }
 
         // obter constante do lado direito
-        double cons = 0;
+        int cons = 0;
         if (op != OperadorRelacional::Irrestrito)
-        	cons = atof((*elem)[2].c_str());
+        	cons = atoi((*elem)[2].c_str());
 
         limiteVariavelRelacao[indVariavel] = op;
         limiteVariavelConstante[indVariavel] = cons;
     }
 
-    ModeloPL* modelo = new ModeloPL(objetivo, quantidadeVariaveis, coeficientesFuncaoObjetivo, quantidadeRestricoes,
+    ModeloPL_Racional* modelo = new ModeloPL_Racional(objetivo, quantidadeVariaveis, coeficientesFuncaoObjetivo, quantidadeRestricoes,
     		matrizCoeficientes, operadorRelacional, vetorConstantes, limiteVariavelRelacao, limiteVariavelConstante);
 
     delete [] coeficientesFuncaoObjetivo;
@@ -186,23 +307,98 @@ ModeloPL* lerModeloProgramacaoLinear() {
     return modelo;
 }
 
+//int main() {
+//    // entrada de dados:
+//	ModeloPL* modeloOriginal = lerModeloProgramacaoLinear();
+//	std::string* legenda = new std::string("Modelo original");
+//	modeloOriginal->imprimirModelo(legenda);
+//	ModeloPL* modeloNaFormaPadrao = modeloOriginal->obterModeloNaFormaPadrao();
+//	*legenda = "Modelo na forma padrão";
+//	modeloNaFormaPadrao->imprimirModelo(legenda);
+//
+//	// determina solução básica factível
+//	double* solucaoBasicaFactivel = modeloNaFormaPadrao->definirSolucaoBasicaFactivel();
+//	*legenda = "Modelo na forma padrão após definir solução básica factível";
+//	modeloNaFormaPadrao->imprimirModelo(legenda);
+//
+//	std::printf("\n Solução básica factível:\n");
+//	for (int i = 0; i < modeloNaFormaPadrao->getQuantidadeVariaveis(); i++) {
+//		std::printf("  x%-2d = %8.3f\n", i + 1, solucaoBasicaFactivel[i]);
+//	}
+//
+//	modeloNaFormaPadrao->definirTableauInicialBigM();
+//	modeloNaFormaPadrao->imprimirTableau();
+//
+//	int iteracoes = 0;
+//	bool solOtima = false;
+//	while (true) {
+//		bool deuPasso = modeloNaFormaPadrao->executarPassoSimplex();
+//		if (deuPasso) {
+//			modeloNaFormaPadrao->imprimirTableau();
+//			iteracoes++;
+//			if (iteracoes > 10)
+//				break;
+//		} else {
+//			solOtima = true;
+//			break;
+//		}
+//	}
+//	if (solOtima) {
+//		modeloNaFormaPadrao->imprimirSolucaoTableau();
+//	} else {
+//		std::printf("\nProblema para encontrar solução ótima. Loop.");
+//	}
+//	std::printf("\n\nFim da execução do SIMPLEX \"normal\".\n");
+//	//delete modeloNaFormaPadrao;
+//
+//	std::printf("\n\nExecução do SIMPLEX Revisado:\n");
+//	modeloNaFormaPadrao = modeloOriginal->obterModeloNaFormaPadrao();
+//	modeloNaFormaPadrao->definirTableauInicialSimplexRevisado();
+//	modeloNaFormaPadrao->imprimirTableauSimplexRevisado();
+//
+//	iteracoes = 0;
+//	solOtima = false;
+//	while (true) {
+//		bool deuPasso = modeloNaFormaPadrao->executarPassoSimplexRevisado();
+//		if (deuPasso) {
+//			modeloNaFormaPadrao->imprimirTableauSimplexRevisado();
+//			iteracoes++;
+//			if (iteracoes > 10)
+//				break;
+//		} else {
+//			solOtima = true;
+//			break;
+//		}
+//	}
+//	if (solOtima) {
+//		modeloNaFormaPadrao->imprimirSolucaoTableauSimplexRevisado();
+//	} else {
+//		std::printf("\nProblema para encontrar solução ótima. Loop.");
+//	}
+//
+//	std::printf("\n\nFim da execução do SIMPLEX Revisado.\n\n");
+//	//delete modeloNaFormaPadrao;
+//
+//    return 0;
+//}
+
 int main() {
     // entrada de dados:
-	ModeloPL* modeloOriginal = lerModeloProgramacaoLinear();
+	ModeloPL_Racional* modeloOriginal = lerModeloProgramacaoLinear_Racional();
 	std::string* legenda = new std::string("Modelo original");
 	modeloOriginal->imprimirModelo(legenda);
-	ModeloPL* modeloNaFormaPadrao = modeloOriginal->obterModeloNaFormaPadrao();
+	ModeloPL_Racional* modeloNaFormaPadrao = modeloOriginal->obterModeloNaFormaPadrao();
 	*legenda = "Modelo na forma padrão";
 	modeloNaFormaPadrao->imprimirModelo(legenda);
 
 	// determina solução básica factível
-	double* solucaoBasicaFactivel = modeloNaFormaPadrao->definirSolucaoBasicaFactivel();
+	NumeroRacional* solucaoBasicaFactivel = modeloNaFormaPadrao->definirSolucaoBasicaFactivel();
 	*legenda = "Modelo na forma padrão após definir solução básica factível";
 	modeloNaFormaPadrao->imprimirModelo(legenda);
 
 	std::printf("\n Solução básica factível:\n");
 	for (int i = 0; i < modeloNaFormaPadrao->getQuantidadeVariaveis(); i++) {
-		std::printf("  x%-2d = %8.3f\n", i + 1, solucaoBasicaFactivel[i]);
+		std::printf("  x%-2d = %8s\n", i + 1, solucaoBasicaFactivel[i].toString().c_str());
 	}
 
 	modeloNaFormaPadrao->definirTableauInicialBigM();
@@ -260,4 +456,3 @@ int main() {
 
     return 0;
 }
-

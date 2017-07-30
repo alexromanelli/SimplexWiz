@@ -4,13 +4,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../ProgramacaoLinear/ModeloPL.cpp 
+../ProgramacaoLinear/ModeloPL.cpp \
+../ProgramacaoLinear/ModeloPLRacional.cpp 
 
 OBJS += \
-./ProgramacaoLinear/ModeloPL.o 
+./ProgramacaoLinear/ModeloPL.o \
+./ProgramacaoLinear/ModeloPLRacional.o 
 
 CPP_DEPS += \
-./ProgramacaoLinear/ModeloPL.d 
+./ProgramacaoLinear/ModeloPL.d \
+./ProgramacaoLinear/ModeloPLRacional.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

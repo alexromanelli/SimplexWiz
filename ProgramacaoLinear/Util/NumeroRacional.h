@@ -31,11 +31,13 @@ private:
 	}
 
 public:
+	NumeroRacional() { this->numerador = 0; this->denominador = 1; }
 	NumeroRacional(int n, int d = 1);
 	virtual ~NumeroRacional();
 
 	std::string toString();
 	std::string toString(int totalCaracteres);
+	double toDouble() { return (double) numerador / (double) denominador; }
 
 	NumeroRacional operator+(const NumeroRacional& r);
 	NumeroRacional operator-(const NumeroRacional& r);
@@ -43,10 +45,23 @@ public:
 	NumeroRacional operator/(const NumeroRacional& r);
 	NumeroRacional operator=(const NumeroRacional& r);
 	bool operator==(const NumeroRacional& r);
+	bool operator!=(const NumeroRacional& r);
 	bool operator>=(const NumeroRacional& r);
 	bool operator<=(const NumeroRacional& r);
 	bool operator>(const NumeroRacional& r);
 	bool operator<(const NumeroRacional& r);
+
+	NumeroRacional operator+(const int& r);
+	NumeroRacional operator-(const int& r);
+	NumeroRacional operator*(const int& r);
+	NumeroRacional operator/(const int& r);
+	NumeroRacional operator=(const int& r);
+	bool operator==(const double& r);
+	bool operator!=(const double& r);
+	bool operator>=(const double& r);
+	bool operator<=(const double& r);
+	bool operator>(const double& r);
+	bool operator<(const double& r);
 };
 
 #endif /* UTIL_NUMERORACIONAL_H_ */
