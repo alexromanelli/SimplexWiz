@@ -1,0 +1,12 @@
+variaveis: 3
+objetivo: max
+coeficientes-funcao-objetivo: 0 -2 1
+restricoes: 3
+1 -2 1 >= -4
+1 1 1 <= 7
+2 -1 -1 <= 5
+limites-variaveis:
+1 >= 0
+2 >= 0
+3 >= 0
+

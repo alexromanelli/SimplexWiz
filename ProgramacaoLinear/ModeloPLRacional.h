@@ -74,6 +74,11 @@ private:
 	NumeroRacional* tableauSR_Vetor_b_barra;
 	bool* tableauSR_VariavelEliminada;
 
+	int totalMultiplicacoesSimplexNormal;
+	int totalMultiplicacoesSimplexRevisado;
+	int totalAdicoesSimplexNormal;
+	int totalAdicoesSimplexRevisado;
+
 	/**
 	 * Faz um mapeamento entre as variáveis originais no modelo, representadas pelas linhas desta
 	 * matriz, e as variáveis atuais, representadas por duas colunas.
@@ -126,6 +131,10 @@ public:
 	NumeroRacional* obterSolucaoTableauSimplexRevisado();
 	void imprimirSolucaoTableauSimplexRevisado();
 
+	int obterTotalAdicoesSimplexNormal();
+	int obterTotalMultiplicacoesSimplexNormal();
+	int obterTotalAdicoesSimplexRevisado();
+	int obterTotalMultiplicacoesSimplexRevisado();
 };
 
 #endif /* MODELOPLRACIONAL_H_ */

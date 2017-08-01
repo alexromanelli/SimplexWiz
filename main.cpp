@@ -382,6 +382,16 @@ ModeloPL_Racional* lerModeloProgramacaoLinear_Racional() {
 //    return 0;
 //}
 
+void imprimirComparativoSimplexNormalRevisado(int totalAdicoesSimplexNormal, int totalMultiplicacoesSimplexNormal,
+		int totalAdicoesSimplexRevisado, int totalMultiplicacoesSimplexRevisado) {
+	std::printf("\nComparativo Simplex-Normal vs Simplex-Revisado:\n\n");
+	std::printf(" Operação       |    Normal | Revisado \n");
+	std::printf("----------------+-----------+----------\n");
+	std::printf(" Adições        | %9d | %9d \n", totalAdicoesSimplexNormal, totalAdicoesSimplexRevisado);
+	std::printf(" Multiplicações | %9d | %9d \n", totalMultiplicacoesSimplexNormal, totalMultiplicacoesSimplexRevisado);
+	std::printf("----------------+-----------+----------\n");
+}
+
 int main() {
     // entrada de dados:
 	ModeloPL_Racional* modeloOriginal = lerModeloProgramacaoLinear_Racional();
@@ -424,6 +434,9 @@ int main() {
 		std::printf("\nProblema para encontrar solução ótima. Loop.");
 	}
 	std::printf("\n\nFim da execução do SIMPLEX \"normal\".\n");
+
+	int totalAdicoesSimplexNormal = modeloNaFormaPadrao->obterTotalAdicoesSimplexNormal();
+	int totalMultiplicacoesSimplexNormal = modeloNaFormaPadrao->obterTotalMultiplicacoesSimplexNormal();
 	//delete modeloNaFormaPadrao;
 
 	std::printf("\n\nExecução do SIMPLEX Revisado:\n");
@@ -452,7 +465,12 @@ int main() {
 	}
 
 	std::printf("\n\nFim da execução do SIMPLEX Revisado.\n\n");
+	int totalAdicoesSimplexRevisado = modeloNaFormaPadrao->obterTotalAdicoesSimplexRevisado();
+	int totalMultiplicacoesSimplexRevisado = modeloNaFormaPadrao->obterTotalMultiplicacoesSimplexRevisado();
 	//delete modeloNaFormaPadrao;
+
+	imprimirComparativoSimplexNormalRevisado(totalAdicoesSimplexNormal, totalMultiplicacoesSimplexNormal,
+			totalAdicoesSimplexRevisado, totalMultiplicacoesSimplexRevisado);
 
     return 0;
 }

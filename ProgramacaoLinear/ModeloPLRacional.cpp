@@ -602,6 +602,9 @@ void ModeloPL_Racional::definirTableauInicialBigM() {
 	for (int i = 0; i < quantidadeRestricoes; i++) {
 		tableauZ = tableauZ + (tableauCB[i] * tableauConstantesLadoDireito[i]);
 	}
+
+	totalAdicoesSimplexNormal = 0;
+	totalMultiplicacoesSimplexNormal = 0;
 }
 
 bool ModeloPL_Racional::executarPassoSimplex() {
@@ -651,6 +654,7 @@ bool ModeloPL_Racional::executarPassoSimplex() {
 
 		if (tableauMatriz[i][indMaiorMelhoria] > 0) {
 			NumeroRacional razao = tableauConstantesLadoDireito[i] / tableauMatriz[i][indMaiorMelhoria];
+			totalMultiplicacoesSimplexNormal++;
 			if (razao < razaoMinima) {
 				razaoMinima = razao;
 				indLinhaRazaoMinima = i;
@@ -677,8 +681,10 @@ bool ModeloPL_Racional::executarPassoSimplex() {
 		NumeroRacional coef = tableauMatriz[indLinhaRazaoMinima][indMaiorMelhoria];
 		for (int i = 0; i < quantidadeVariaveis; i++) {
 			tableauMatriz[indLinhaRazaoMinima][i] = tableauMatriz[indLinhaRazaoMinima][i] / coef;
+			totalMultiplicacoesSimplexNormal++;
 		}
 		tableauConstantesLadoDireito[indLinhaRazaoMinima] = tableauConstantesLadoDireito[indLinhaRazaoMinima] / coef;
+		totalMultiplicacoesSimplexNormal++;
 	}
 	// faz operação de linha para tornar coeficientes da nova variável básica igual a zero nas outras linhas
 	for (int i = 0; i < quantidadeRestricoes; i++) {
@@ -686,9 +692,13 @@ bool ModeloPL_Racional::executarPassoSimplex() {
 			NumeroRacional coef = tableauMatriz[i][indMaiorMelhoria];
 			for (int j = 0; j < quantidadeVariaveis; j++) {
 				tableauMatriz[i][j] = tableauMatriz[i][j] + (tableauMatriz[indLinhaRazaoMinima][j] * (coef * -1));
+				totalAdicoesSimplexNormal++;
+				totalMultiplicacoesSimplexNormal++;
 			}
 			tableauConstantesLadoDireito[i] = tableauConstantesLadoDireito[i] +
 					(tableauConstantesLadoDireito[indLinhaRazaoMinima] * (coef * -1));
+			totalAdicoesSimplexNormal++;
+			totalMultiplicacoesSimplexNormal++;
 		}
 	}
 	// atualiza contribuição lucro líquido
@@ -696,13 +706,18 @@ bool ModeloPL_Racional::executarPassoSimplex() {
 		NumeroRacional produtoInterno = 0;
 		for (int j = 0; j < quantidadeRestricoes; j++) {
 			produtoInterno = produtoInterno + (tableauCB[j] * tableauMatriz[j][i]);
+			totalAdicoesSimplexNormal++;
+			totalMultiplicacoesSimplexNormal++;
 		}
 		tableauContribuicaoLucroLiquido[i] = tableauCj[i] - produtoInterno;
+		totalAdicoesSimplexNormal++;
 	}
 	// atualiza Z
 	tableauZ = 0;
 	for (int i = 0; i < quantidadeRestricoes; i++) {
 		tableauZ = tableauZ + (tableauCB[i] * tableauConstantesLadoDireito[i]);
+		totalAdicoesSimplexNormal++;
+		totalMultiplicacoesSimplexNormal++;
 	}
 
 	return true;
@@ -954,6 +969,9 @@ void ModeloPL_Racional::definirTableauInicialSimplexRevisado() {
 	tableauSR_VariavelEliminada = new bool[quantidadeVariaveis];
 	for (int i = 0; i < quantidadeVariaveis; i++)
 		tableauSR_VariavelEliminada[i] = false;
+
+	totalAdicoesSimplexRevisado = 0;
+	totalMultiplicacoesSimplexRevisado = 0;
 }
 
 bool ModeloPL_Racional::executarPassoSimplexRevisado() {
@@ -1022,6 +1040,8 @@ bool ModeloPL_Racional::executarPassoSimplexRevisado() {
 			NumeroRacional item = 0;
 			for (int j = 0; j < quantidadeRestricoes; j++) {
 				item = item + (tableauSR_Matriz_B_inversa[i][j] * tableauSR_Vetores_P[indMaiorMelhoria][j]);
+				totalAdicoesSimplexRevisado++;
+				totalMultiplicacoesSimplexRevisado++;
 			}
 			p_barra[i] = item;
 			std::printf("%8s ", item.toString().c_str());
@@ -1039,6 +1059,7 @@ bool ModeloPL_Racional::executarPassoSimplexRevisado() {
 
 			if (p_barra[i] > 0) {
 				NumeroRacional razao = tableauSR_Vetor_b_barra[i] / p_barra[i];
+				totalMultiplicacoesSimplexRevisado++;
 				if (razao < razaoMinima) {
 					razaoMinima = razao;
 					indLinhaRazaoMinima = i;
@@ -1058,8 +1079,10 @@ bool ModeloPL_Racional::executarPassoSimplexRevisado() {
 		//p_barra[indLinhaRazaoMinima] = 1;
 		for (int i = 0; i < quantidadeRestricoes; i++) {
 			tableauSR_Matriz_B_inversa[indLinhaRazaoMinima][i] = tableauSR_Matriz_B_inversa[indLinhaRazaoMinima][i] / coef;
+			totalMultiplicacoesSimplexRevisado++;
 		}
 		tableauSR_Vetor_b_barra[indLinhaRazaoMinima] = tableauSR_Vetor_b_barra[indLinhaRazaoMinima] / coef;
+		totalMultiplicacoesSimplexRevisado++;
 		for (int i = 0; i < quantidadeRestricoes; i++) {
 			if (i == indLinhaRazaoMinima)
 				continue;
@@ -1068,9 +1091,13 @@ bool ModeloPL_Racional::executarPassoSimplexRevisado() {
 			for (int j = 0; j < quantidadeRestricoes; j++) {
 				tableauSR_Matriz_B_inversa[i][j] = tableauSR_Matriz_B_inversa[i][j] -
 						(coef * tableauSR_Matriz_B_inversa[indLinhaRazaoMinima][j]);
+				totalAdicoesSimplexRevisado++;
+				totalMultiplicacoesSimplexRevisado++;
 			}
 			tableauSR_Vetor_b_barra[i] = tableauSR_Vetor_b_barra[i] -
 					(coef * tableauSR_Vetor_b_barra[indLinhaRazaoMinima]);
+			totalAdicoesSimplexRevisado++;
+			totalMultiplicacoesSimplexRevisado++;
 		}
 
 		// elimina variável que sai da base, se for artificial
@@ -1133,6 +1160,8 @@ void ModeloPL_Racional::calcularTableauSR_MultiplicadorSimplex() {
 		NumeroRacional item = 0;
 		for (int j = 0; j < quantidadeRestricoes; j++) {
 			item = item + (tableauSR_CB[j] * tableauSR_Matriz_B_inversa[j][i]);
+			totalAdicoesSimplexRevisado++;
+			totalMultiplicacoesSimplexRevisado++;
 		}
 		tableauSR_pi[i] = item;
 	}
@@ -1150,8 +1179,11 @@ void ModeloPL_Racional::calcularTableauSR_C_barra() {
 		NumeroRacional prod = 0;
 		for (int j = 0; j < quantidadeRestricoes; j++) {
 			prod = prod + (tableauSR_pi[j] * tableauSR_Vetores_P[i][j]);
+			totalAdicoesSimplexRevisado++;
+			totalMultiplicacoesSimplexRevisado++;
 		}
 		tableauSR_C_barra[i] = tableauSR_Cj[i] - prod;
+		totalAdicoesSimplexRevisado++;
 	}
 }
 
@@ -1197,4 +1229,20 @@ void ModeloPL_Racional::imprimirSolucaoTableauSimplexRevisado() {
 			}
 		}
 	}
+}
+
+int ModeloPL_Racional::obterTotalAdicoesSimplexNormal() {
+	return totalAdicoesSimplexNormal;
+}
+
+int ModeloPL_Racional::obterTotalMultiplicacoesSimplexNormal() {
+	return totalMultiplicacoesSimplexNormal;
+}
+
+int ModeloPL_Racional::obterTotalAdicoesSimplexRevisado() {
+	return totalAdicoesSimplexRevisado;
+}
+
+int ModeloPL_Racional::obterTotalMultiplicacoesSimplexRevisado() {
+	return totalMultiplicacoesSimplexRevisado;
 }
